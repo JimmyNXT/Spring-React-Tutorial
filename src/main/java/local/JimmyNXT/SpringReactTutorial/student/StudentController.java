@@ -1,8 +1,8 @@
 package local.JimmyNXT.SpringReactTutorial.student;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,14 +12,20 @@ import java.util.UUID;
 @RequestMapping("students")
 public class StudentController {
 
+    private final StudentService studentService;
+
+    @Autowired
+    public StudentController(StudentService studentService) {
+        this.studentService = studentService;
+    }
+
     @GetMapping
     public List<Student> getAllStudents(){
+        return studentService.getAllStudents();
+    }
 
-        ArrayList<Student> Students = new ArrayList<Student>();
-
-        Students.add(new Student(UUID.randomUUID(), "James", "Bond", "Example@test.com", Student.Gender.MALE));
-        Students.add(new Student(UUID.randomUUID(), "Elisa", "Tamara", "Example@hotmail.com", Student.Gender.FEMALE));
-
-        return Students;
+    @PostMapping(consumes= MediaType.APPLICATION_JSON_VALUE)
+    public void addNewStudent(@RequestBody Student student){
+        studentService.addNewStudent(student);
     }
 }

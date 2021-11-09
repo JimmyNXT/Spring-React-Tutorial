@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import Container from "./Container";
+import Footer from "./Footer";
 import "./App.css";
 import { getAllStudents } from "./client";
-import { Avatar, Spin, Table } from "antd";
+import AddStudentForm from "./forms/AddStudentForm";
+import { Avatar, Spin, Table, Modal } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 
 const getIndicatorIcon = () => (
@@ -13,11 +15,20 @@ class App extends Component {
   state = {
     students: [],
     isFetching: false,
+    isAddStudentModalVisable: false,
   };
 
   componentDidMount() {
     this.fetchStudents();
   }
+
+  openIsAddStudentModal = () => {
+    this.setState({ isAddStudentModalVisable: true });
+  };
+
+  closeIsAddStudentModal = () => {
+    this.setState({ isAddStudentModalVisable: false });
+  };
 
   fetchStudents = () => {
     this.setState({
@@ -35,7 +46,7 @@ class App extends Component {
   };
 
   render() {
-    const { students, isFetching } = this.state;
+    const { students, isFetching, isAddStudentModalVisable } = this.state;
 
     if (isFetching) {
       return (
@@ -88,10 +99,29 @@ class App extends Component {
       return (
         <Container>
           <Table
+            style={{ marginBottom: "100px" }}
             dataSource={students}
             columns={columns}
             pagination={false}
             rowKey="studentId"
+          />
+          <Modal
+            title="Add new Students"
+            visible={isAddStudentModalVisable}
+            onOk={this.closeIsAddStudentModal}
+            onCancel={this.closeIsAddStudentModal}
+            width={1000}
+          >
+            <AddStudentForm
+              onSuccess={() => {
+                this.closeIsAddStudentModal();
+                this.fetchStudents();
+              }}
+            />
+          </Modal>
+          <Footer
+            numberOfStudents={students.length}
+            handleAddStudentClickEvent={this.openIsAddStudentModal}
           />
         </Container>
       );
