@@ -1,9 +1,11 @@
 package local.JimmyNXT.SpringReactTutorial.student;
 
+import local.JimmyNXT.SpringReactTutorial.exception.ApiRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -25,7 +27,7 @@ public class StudentController {
     }
 
     @PostMapping(consumes= MediaType.APPLICATION_JSON_VALUE)
-    public void addNewStudent(@RequestBody Student student){
+    public void addNewStudent(@RequestBody @Valid Student student){
         studentService.addNewStudent(student);
     }
 }
